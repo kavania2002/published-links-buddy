@@ -56,7 +56,7 @@ export default function LinkGroup({
     <div className="mb-2 bg-white rounded-lg mx-2 shadow-sm">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center gap-2 bg-gray-300 hover:bg-gray-100 transition-colors rounded-lg">
+        className="w-full px-4 py-3 flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition-colors rounded-lg">
         {getGroupIcon()}
         <h2 className="font-medium text-gray-900">{getGroupTitle()}</h2>
         <span className="text-sm bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">
