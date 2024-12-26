@@ -17,6 +17,12 @@
   "background": {
     "service_worker": "service-worker.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["scripts/claude.bundle.js"]
+    }
+  ],
   "side_panel": {
     "default_path": "index.html"
   },
