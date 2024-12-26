@@ -1,18 +1,21 @@
 import {
   POSSIBLE_DIALOG_OPEN_TEXTS,
   BACKDROP_ELEMENT_CLASS,
-} from "./constants.js";
+} from "./constants";
 import {
   isValidURL,
   isCloseIconElement,
   getDialogElement,
   findUrlFromDialog,
-} from "./utils.js";
+} from "./utils";
 
-let observer = null;
+let observer: MutationObserver | null = null;
 
-const reset = () => {
-  console.log("Reseting...");
+/**
+ * Resets the observer and removes event listeners.
+ */
+const reset = (): void => {
+  console.log("Resetting...");
   if (observer) {
     console.log("Disconnecting observer");
     observer.disconnect();
@@ -21,9 +24,14 @@ const reset = () => {
   document.removeEventListener("click", handleDialogCloseClick);
 };
 
-const handlePublishedUrl = (mutationList) => {
-  for (let mutation of mutationList) {
-    const dialogElement = mutation.target;
+/**
+ * Handles mutations to find a published URL.
+ * @param mutationList - List of mutations observed.
+ * @returns The found URL or null.
+ */
+const handlePublishedUrl = (mutationList: MutationRecord[]): string | null => {
+  for (const mutation of mutationList) {
+    const dialogElement = mutation.target as HTMLElement;
     const url = findUrlFromDialog(dialogElement);
     if (isValidURL(url)) {
       console.log("URL found from observer", url);
@@ -34,8 +42,12 @@ const handlePublishedUrl = (mutationList) => {
   return null;
 };
 
-const handleDialogCloseClick = (event) => {
-  const clickedElement = event.target;
+/**
+ * Handles click events to close the dialog.
+ * @param event - The mouse event triggered by a click.
+ */
+const handleDialogCloseClick = (event: MouseEvent): void => {
+  const clickedElement = event.target as HTMLElement;
   console.log("Element Clicked", clickedElement);
   if (
     clickedElement.classList.contains(BACKDROP_ELEMENT_CLASS) ||
@@ -45,8 +57,13 @@ const handleDialogCloseClick = (event) => {
   }
 };
 
-export const handleDialogClick = (event) => {
-  if (POSSIBLE_DIALOG_OPEN_TEXTS.includes(event.target.innerText)) {
+/**
+ * Handles click events to open the dialog.
+ * @param event - The mouse event triggered by a click.
+ */
+export const handleDialogClick = (event: MouseEvent): void => {
+  const clickedElement = event.target as HTMLElement;
+  if (POSSIBLE_DIALOG_OPEN_TEXTS.includes(clickedElement.innerText)) {
     const dialogElement = getDialogElement();
     if (dialogElement) {
       const url = findUrlFromDialog(dialogElement);
