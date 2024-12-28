@@ -6,11 +6,12 @@ const __dirname = path.dirname(__filename);
 
 export default {
   entry: {
-    claude: "./src/scripts/claude/index.ts",
+    "scripts/claude": "./src/scripts/claude/index.ts",
+    "background/service-worker": "./src/background/service-worker.ts",
   },
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist/scripts"),
+    path: path.resolve(__dirname, "dist"),
   },
   mode: "production",
   module: {

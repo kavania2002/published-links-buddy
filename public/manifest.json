@@ -15,7 +15,7 @@
     "default_title": "Click to open Side Panel"
   },
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "background/service-worker.bundle.js"
   },
   "content_scripts": [
     {
