@@ -3,15 +3,21 @@ import { Plus, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import LinkForm from "./LinkForm";
 import LinkGroup from "./LinkGroup";
 import SettingsPanel from "./SettingsPanel";
-import { Link, LinkType } from "../types/Link";
-import { Settings } from "../types/Settings";
+import { Settings, Link, LinkType } from "../types";
 import { AI_BOTS } from "../constants/bots";
 import Button from "./ui/Button";
+import { useLinks } from "../hooks/useLinks";
 
 export default function Sidebar() {
-  const [links, setLinks] = useState<Link[]>([]);
+  const {
+    links,
+    editingLink,
+    setEditingLink,
+    addLink,
+    updateLink,
+    deleteLink,
+  } = useLinks();
   const [isAdding, setIsAdding] = useState(false);
-  const [editingLink, setEditingLink] = useState<Link | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<Settings>({
     autoSave: true,
@@ -22,34 +28,10 @@ export default function Sidebar() {
 
   const handleSubmit = (linkData: Partial<Link>) => {
     if (editingLink) {
-      setLinks(
-        links.map((link) =>
-          link.id === editingLink.id
-            ? {
-                ...editingLink,
-                ...linkData,
-                updatedAt: new Date().toISOString(),
-              }
-            : link
-        )
-      );
-      setEditingLink(null);
+      updateLink(linkData);
     } else {
-      const newLink: Link = {
-        id: Date.now().toString(),
-        title: linkData.title || "",
-        url: linkData.url || "",
-        type: (linkData.type as LinkType) || "gpt",
-        createdAt: new Date().toISOString(),
-      };
-      setLinks([newLink, ...links]);
+      addLink(linkData);
       setIsAdding(false);
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this link?")) {
-      setLinks(links.filter((link) => link.id !== id));
     }
   };
 
@@ -105,7 +87,7 @@ export default function Sidebar() {
                   type={bot.id}
                   links={groupedLinks[bot.id] || []}
                   onEdit={setEditingLink}
-                  onDelete={handleDelete}
+                  onDelete={deleteLink}
                 />
               ))}
             </div>

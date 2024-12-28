@@ -1,5 +1,5 @@
 import { Trash2, Edit2, ExternalLink } from "lucide-react";
-import { Link } from "../types/Link";
+import { Link } from "../types";
 
 interface LinkItemProps {
   link: Link;

@@ -1,4 +1,4 @@
-import { BotDetails } from "../types/Link";
+import { BotDetails } from "../types";
 
 export const AI_BOTS: BotDetails[] = [
   {

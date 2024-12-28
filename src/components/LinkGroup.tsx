@@ -6,7 +6,7 @@ import {
   ExternalLink,
   ChevronDown,
 } from "lucide-react";
-import { Link, LinkType } from "../types/Link";
+import { Link, LinkType } from "../types";
 import LinkItem from "./LinkItem";
 
 interface LinkGroupProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import { Link, LinkType } from '../types/Link';
+import { Link, LinkType } from '../types';
 
 interface LinkFormProps {
   link: Partial<Link>;

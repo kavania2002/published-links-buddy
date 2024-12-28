@@ -1,6 +1,6 @@
 import React from "react";
 import { X, Save, Bell, Clock, Power } from "lucide-react";
-import { Settings } from "../types/Settings";
+import { Settings } from "../types";
 import SettingsItem from "./SettingsItem";
 import Checkbox from "./ui/Checkbox";
 import Button from "./ui/Button";
