@@ -3,7 +3,7 @@ import { Plus, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import LinkForm from "./LinkForm";
 import LinkGroup from "./LinkGroup";
 import SettingsPanel from "./SettingsPanel";
-import { Settings, Link, LinkType } from "../types";
+import { Settings, Link, LinkType, Message } from "../types";
 import { AI_BOTS } from "../constants/bots";
 import Button from "./ui/Button";
 import { useLinks } from "../hooks/useLinks";
@@ -44,6 +44,19 @@ export default function Sidebar() {
     const group = acc[link.type] || [];
     return { ...acc, [link.type]: [...group, link] };
   }, {} as Record<LinkType, Link[]>);
+
+  const listenMessage = () => {
+    chrome.runtime.onMessage.addListener((message: Message) => {
+      addLink({
+        title: "Untitled",
+        url: message.url,
+        type: "claude",
+        createdAt: new Date().toISOString(),
+      });
+    });
+  };
+
+  listenMessage();
 
   return (
     <div className="w-full h-screen bg-white shadow-xl flex flex-col relative">

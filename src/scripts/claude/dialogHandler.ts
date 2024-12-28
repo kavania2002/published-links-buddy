@@ -1,3 +1,4 @@
+import { sendUrlToBackground } from "../common/utils";
 import {
   POSSIBLE_DIALOG_OPEN_TEXTS,
   BACKDROP_ELEMENT_CLASS,
@@ -35,6 +36,7 @@ const handlePublishedUrl = (mutationList: MutationRecord[]): string | null => {
     const url = findUrlFromDialog(dialogElement);
     if (isValidURL(url)) {
       console.log("URL found from observer", url);
+      sendUrlToBackground(url);
       reset();
       return url;
     }
@@ -69,6 +71,7 @@ export const handleDialogClick = (event: MouseEvent): void => {
       const url = findUrlFromDialog(dialogElement);
       if (isValidURL(url)) {
         console.log("URL found", url);
+        sendUrlToBackground(url);
       } else {
         observer = new MutationObserver((mutationList) =>
           handlePublishedUrl(mutationList)
