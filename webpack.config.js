@@ -26,4 +26,5 @@ export default {
   resolve: {
     extensions: [".ts", "..."],
   },
+  devtool: "source-map",
 };
