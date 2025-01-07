@@ -48,7 +48,7 @@ export default function Sidebar() {
   const listenMessage = () => {
     chrome.runtime.onMessage.addListener((message: Message) => {
       addLink({
-        title: "Untitled",
+        title: message.title,
         url: message.url,
         type: "claude",
         createdAt: new Date().toISOString(),
@@ -56,7 +56,9 @@ export default function Sidebar() {
     });
   };
 
-  listenMessage();
+  if (process.env.NODE_ENV !== "development") {
+    listenMessage();
+  }
 
   return (
     <div className="w-full h-screen bg-white shadow-xl flex flex-col relative">
