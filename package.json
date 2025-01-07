@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npx webpack",
+    "build": "tsc -b && vite build",
+    "extension": "yarn build && npx webpack",
     "lint": "eslint .",
     "preview": "vite preview"
   },
