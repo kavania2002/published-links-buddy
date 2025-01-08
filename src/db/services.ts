@@ -83,6 +83,7 @@ async function checkItemExistsFromIndex(
   const transaction = db.transaction("links", "readonly");
   const store = transaction.objectStore("links");
   const index = store.index(itemIndex);
+  // TODO: Use count function first to prevent index lookup
 
   return new Promise((resolve, reject) => {
     const request = index.get(item);

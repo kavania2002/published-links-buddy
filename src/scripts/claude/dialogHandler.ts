@@ -65,6 +65,7 @@ const handleDialogCloseClick = (event: MouseEvent): void => {
  */
 export const handleDialogClick = (event: MouseEvent): void => {
   const clickedElement = event.target as HTMLElement;
+  // TODO: Listen for SVG click or whole button and not just text
   if (POSSIBLE_DIALOG_OPEN_TEXTS.includes(clickedElement.innerText)) {
     const dialogElement = getDialogElement();
     if (dialogElement) {
