@@ -5,8 +5,12 @@
 export const sendUrlToBackground = async (
   url: string | null
 ): Promise<void> => {
-  const title = await promptUserForURLTitle();
-  if (url) chrome.runtime.sendMessage({ title, url });
+  try {
+    const title = await promptUserForURLTitle();
+    if (url) chrome.runtime.sendMessage({ title, url });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 /**
@@ -14,8 +18,9 @@ export const sendUrlToBackground = async (
  * @returns A promise that resolves to the URL title entered by the user.
  */
 export const promptUserForURLTitle = (): Promise<string> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const input = prompt("Enter a title for the URL:");
+    if (input === null) return reject("User cancelled the prompt.");
     resolve(input || "");
   });
 };
