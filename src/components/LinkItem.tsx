@@ -19,7 +19,7 @@ export default function LinkItem({ link, onEdit, onDelete }: LinkItemProps) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-gray-600 hover:text-gray-900 mt-1 line-clamp-1 flex items-center gap-2 group-hover:underline">
+            className="text-xs text-gray-600 hover:text-gray-900 mt-1 line-clamp-1 flex items-center gap-2 group-hover:underline">
             <ExternalLink className="w-3 h-3" />
             <p className="w-full break-all">{link.url}</p>
           </a>
