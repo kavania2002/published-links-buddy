@@ -46,8 +46,8 @@ export default function Sidebar() {
   }, {} as Record<LinkType, Link[]>);
 
   const listenMessage = () => {
-    chrome.runtime.onMessage.addListener((message: Message) => {
-      addLink({
+    chrome.runtime.onMessage.addListener(async (message: Message) => {
+      await addLink({
         title: message.title,
         url: message.url,
         type: "claude",

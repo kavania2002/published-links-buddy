@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, LinkType } from "../types";
+import { addLink as dbAddLink, getLinks as dbGetLinks } from "../db/services";
 
-export function useLinks(initialLinks: Link[] = []) {
-  const [links, setLinks] = useState<Link[]>(initialLinks);
+export function useLinks() {
+  const [links, setLinks] = useState<Link[]>([]);
   const [editingLink, setEditingLink] = useState<Link | null>(null);
 
-  const addLink = (linkData: Partial<Link>) => {
+  useEffect(() => {
+    dbGetLinks().then(setLinks);
+  }, []);
+
+  const addLink = async (linkData: Partial<Link>) => {
     const newLink: Link = {
       id: Date.now().toString(),
       title: linkData.title || "",
@@ -13,7 +18,8 @@ export function useLinks(initialLinks: Link[] = []) {
       type: (linkData.type as LinkType) || "gpt",
       createdAt: new Date().toISOString(),
     };
-    setLinks([newLink, ...links]);
+    await dbAddLink(newLink);
+    dbGetLinks().then(setLinks);
   };
 
   const updateLink = (linkData: Partial<Link>) => {
