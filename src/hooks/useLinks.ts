@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, LinkType } from "../types";
-import { addLink as dbAddLink, getLinks as dbGetLinks } from "../db/services";
+import { addLink as dbAddLink, getLinks as dbGetLinks, updateLink as dbUpdateLink, deleteLink as dbDeleteLink } from "../db/services";
 
 export function useLinks() {
   const [links, setLinks] = useState<Link[]>([]);
@@ -22,22 +22,18 @@ export function useLinks() {
     dbGetLinks().then(setLinks);
   };
 
-  const updateLink = (linkData: Partial<Link>) => {
+  const updateLink = async (linkData: Partial<Link>) => {
     if (editingLink) {
-      setLinks(
-        links.map((link) =>
-          link.id === editingLink.id
-            ? { ...editingLink, ...linkData, updatedAt: new Date().toISOString() }
-            : link
-        )
-      );
+      await dbUpdateLink(linkData as Link);
+      dbGetLinks().then(setLinks);
       setEditingLink(null);
     }
   };
 
-  const deleteLink = (id: string) => {
+  const deleteLink = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this link?")) {
-      setLinks(links.filter((link) => link.id !== id));
+      await dbDeleteLink(id);
+      dbGetLinks().then(setLinks);
     }
   };
 

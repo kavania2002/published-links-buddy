@@ -3,10 +3,11 @@ import { Plus, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import LinkForm from "./LinkForm";
 import LinkGroup from "./LinkGroup";
 import SettingsPanel from "./SettingsPanel";
-import { Settings, Link, LinkType, Message } from "../types";
+import { Settings, Link, LinkType } from "../types";
 import { AI_BOTS } from "../constants/bots";
 import Button from "./ui/Button";
 import { useLinks } from "../hooks/useLinks";
+import { listenMessage } from "../utils/extension";
 
 export default function Sidebar() {
   const {
@@ -45,19 +46,8 @@ export default function Sidebar() {
     return { ...acc, [link.type]: [...group, link] };
   }, {} as Record<LinkType, Link[]>);
 
-  const listenMessage = () => {
-    chrome.runtime.onMessage.addListener(async (message: Message) => {
-      await addLink({
-        title: message.title,
-        url: message.url,
-        type: "claude",
-        createdAt: new Date().toISOString(),
-      });
-    });
-  };
-
   if (process.env.NODE_ENV !== "development") {
-    listenMessage();
+    listenMessage(addLink);
   }
 
   return (

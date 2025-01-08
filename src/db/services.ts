@@ -23,4 +23,26 @@ async function getLinks(): Promise<Link[]> {
   });
 }
 
-export { addLink, getLinks };
+async function updateLink(link: Link): Promise<number> {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("links", "readwrite");
+    const store = transaction.objectStore("links");
+    const request = store.put(link);
+    transaction.oncomplete = () => resolve(request.result as number);
+    transaction.onerror = () => reject(request.error);
+  });
+}
+
+async function deleteLink(id: string): Promise<undefined> {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("links", "readwrite");
+    const store = transaction.objectStore("links");
+    const request = store.delete(id);
+    transaction.oncomplete = () => resolve(request.result);
+    transaction.onerror = () => reject(request.error);
+  });
+}
+
+export { addLink, getLinks, updateLink, deleteLink };
