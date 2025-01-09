@@ -1,4 +1,8 @@
-import { CLOSE_ICON_D, DEFAULT_URL_TO_EXCLUDE } from "./constants";
+import {
+  CLOSE_ICON_D,
+  DEFAULT_URL_TO_EXCLUDE,
+  PUBLISH_ICON_D,
+} from "./constants";
 
 /**
  * Checks if a URL is valid and not the default excluded URL.
@@ -20,6 +24,18 @@ export const isCloseIconElement = (element: HTMLElement): boolean => {
   return (
     element.querySelector(`path[d="${CLOSE_ICON_D}"]`) !== null ||
     (element.hasAttribute("d") && element.getAttribute("d") === CLOSE_ICON_D)
+  );
+};
+
+/**
+ * Determines if an element is a publish icon.
+ * @param element - The HTML element to check.
+ * @returns True if the element is a publish icon, false otherwise.
+ */
+export const isPublishIconElement = (element: HTMLElement): boolean => {
+  return (
+    element.querySelector(`path[d="${PUBLISH_ICON_D}"]`) !== null ||
+    (element.hasAttribute("d") && element.getAttribute("d") === PUBLISH_ICON_D)
   );
 };
 

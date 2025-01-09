@@ -8,6 +8,7 @@ import {
   isCloseIconElement,
   getDialogElement,
   findUrlFromDialog,
+  isPublishIconElement,
 } from "./utils";
 
 let observer: MutationObserver | null = null;
@@ -16,9 +17,7 @@ let observer: MutationObserver | null = null;
  * Resets the observer and removes event listeners.
  */
 const reset = (): void => {
-  console.log("Resetting...");
   if (observer) {
-    console.log("Disconnecting observer");
     observer.disconnect();
     observer = null;
   }
@@ -35,7 +34,6 @@ const handlePublishedUrl = (mutationList: MutationRecord[]): string | null => {
     const dialogElement = mutation.target as HTMLElement;
     const url = findUrlFromDialog(dialogElement);
     if (isValidURL(url)) {
-      console.log("URL found from observer", url);
       sendUrlToBackground(url);
       reset();
       return url;
@@ -50,7 +48,6 @@ const handlePublishedUrl = (mutationList: MutationRecord[]): string | null => {
  */
 const handleDialogCloseClick = (event: MouseEvent): void => {
   const clickedElement = event.target as HTMLElement;
-  console.log("Element Clicked", clickedElement);
   if (
     clickedElement.classList.contains(BACKDROP_ELEMENT_CLASS) ||
     isCloseIconElement(clickedElement)
@@ -65,13 +62,14 @@ const handleDialogCloseClick = (event: MouseEvent): void => {
  */
 export const handleDialogClick = (event: MouseEvent): void => {
   const clickedElement = event.target as HTMLElement;
-  // TODO: Listen for SVG click or whole button and not just text
-  if (POSSIBLE_DIALOG_OPEN_TEXTS.includes(clickedElement.innerText)) {
+  if (
+    POSSIBLE_DIALOG_OPEN_TEXTS.includes(clickedElement.innerText) ||
+    isPublishIconElement(clickedElement)
+  ) {
     const dialogElement = getDialogElement();
     if (dialogElement) {
       const url = findUrlFromDialog(dialogElement);
       if (isValidURL(url)) {
-        console.log("URL found", url);
         sendUrlToBackground(url);
       } else {
         observer = new MutationObserver((mutationList) =>
