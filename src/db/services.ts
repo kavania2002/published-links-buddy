@@ -82,14 +82,25 @@ async function checkItemExistsFromIndex(
   const db = await openDatabase();
   const transaction = db.transaction("links", "readonly");
   const store = transaction.objectStore("links");
-  const index = store.index(itemIndex);
-  // TODO: Use count function first to prevent index lookup
 
   return new Promise((resolve, reject) => {
-    const request = index.get(item);
-    request.onsuccess = () => resolve(request.result !== undefined);
-    request.onerror = () =>
-      reject(new Error(request.error?.message || "Index lookup failed"));
+    const itemCountRequest = store.count();
+    itemCountRequest.onsuccess = () => {
+      if (itemCountRequest.result === 0) {
+        resolve(false);
+      } else {
+        const index = store.index(itemIndex);
+
+        const request = index.get(item);
+        request.onsuccess = () => resolve(request.result !== undefined);
+        request.onerror = () =>
+          reject(new Error(request.error?.message || "Index lookup failed"));
+      }
+    };
+    itemCountRequest.onerror = () =>
+      reject(
+        new Error(itemCountRequest.error?.message || "Count request failed")
+      );
   });
 }
 
