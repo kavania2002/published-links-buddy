@@ -7,7 +7,6 @@ import { Settings, Link, LinkType } from "../types";
 import { AI_BOTS } from "../constants/bots";
 import Button from "./ui/Button";
 import { useLinks } from "../hooks/useLinks";
-import { listenMessage } from "../utils/extension";
 
 export default function Sidebar() {
   const {
@@ -45,10 +44,6 @@ export default function Sidebar() {
     const group = acc[link.type] || [];
     return { ...acc, [link.type]: [...group, link] };
   }, {} as Record<LinkType, Link[]>);
-
-  if (process.env.NODE_ENV !== "development") {
-    listenMessage(addLink);
-  }
 
   return (
     <div className="w-full h-screen bg-white shadow-xl flex flex-col relative">
