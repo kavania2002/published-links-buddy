@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import LinkForm from "./LinkForm";
-import LinkGroup from "./LinkGroup";
 import SettingsPanel from "./SettingsPanel";
 import { Settings, Link, LinkType } from "../types";
-import { AI_BOTS } from "../constants/bots";
 import Button from "./ui/Button";
 import { useLinks } from "../hooks/useLinks";
+import PlatformFilter from "./PlatformFilter";
+import LinkList from "./LinkList";
 
 export default function Sidebar() {
   const {
@@ -20,6 +20,9 @@ export default function Sidebar() {
   } = useLinks();
   const [isAdding, setIsAdding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<LinkType | "all">(
+    "all"
+  );
   const [settings, setSettings] = useState<Settings>({
     autoSave: true,
     notifications: true,
@@ -41,10 +44,24 @@ export default function Sidebar() {
     setShowSettings(false);
   };
 
-  const groupedLinks = links.reduce((acc, link) => {
-    const group = acc[link.type] || [];
-    return { ...acc, [link.type]: [...group, link] };
-  }, {} as Record<LinkType, Link[]>);
+  const handlePlatformChange = (platform: LinkType | "all") => {
+    setSelectedPlatform(platform);
+  };
+
+  const platformCounts = useMemo(() => {
+    const counts = links.reduce((acc, link) => {
+      return { ...acc, [link.type]: (acc[link.type] || 0) + 1 };
+    }, {} as Record<LinkType | "all", number>);
+
+    counts.all = links.length;
+    return counts;
+  }, [links]);
+
+  const filteredLinks = useMemo(() => {
+    return selectedPlatform === "all"
+      ? links
+      : links.filter((link) => link.type === selectedPlatform);
+  }, [links, selectedPlatform]);
 
   if (process.env.NODE_ENV !== "development") {
     listenLinkUpdates();
@@ -72,6 +89,12 @@ export default function Sidebar() {
         />
       ) : (
         <>
+          <PlatformFilter
+            selected={selectedPlatform}
+            setSelected={handlePlatformChange}
+            counts={platformCounts}
+          />
+
           <div className="flex-1 overflow-y-auto bg-gray-50/50">
             {(isAdding || editingLink) && (
               <LinkForm
@@ -86,15 +109,11 @@ export default function Sidebar() {
             )}
 
             <div className="py-2">
-              {AI_BOTS.map((bot) => (
-                <LinkGroup
-                  key={bot.id}
-                  type={bot.id}
-                  links={groupedLinks[bot.id] || []}
-                  onEdit={setEditingLink}
-                  onDelete={deleteLink}
-                />
-              ))}
+              <LinkList
+                links={filteredLinks}
+                onEdit={setEditingLink}
+                onDelete={deleteLink}
+              />
             </div>
           </div>
 
