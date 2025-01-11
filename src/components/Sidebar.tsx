@@ -46,7 +46,9 @@ export default function Sidebar() {
     return { ...acc, [link.type]: [...group, link] };
   }, {} as Record<LinkType, Link[]>);
 
-  listenLinkUpdates();
+  if (process.env.NODE_ENV !== "development") {
+    listenLinkUpdates();
+  }
 
   return (
     <div className="w-full h-screen bg-white shadow-xl flex flex-col relative">
