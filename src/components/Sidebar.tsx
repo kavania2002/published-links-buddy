@@ -16,6 +16,7 @@ export default function Sidebar() {
     addLink,
     updateLink,
     deleteLink,
+    listenLinkUpdates,
   } = useLinks();
   const [isAdding, setIsAdding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -44,6 +45,8 @@ export default function Sidebar() {
     const group = acc[link.type] || [];
     return { ...acc, [link.type]: [...group, link] };
   }, {} as Record<LinkType, Link[]>);
+
+  listenLinkUpdates();
 
   return (
     <div className="w-full h-screen bg-white shadow-xl flex flex-col relative">

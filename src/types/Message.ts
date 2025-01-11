@@ -1,4 +1,7 @@
 export interface Message {
-  title: string;
-  url: string;
+  message?: string;
+  data?: {
+    title: string;
+    url: string;
+  };
 }

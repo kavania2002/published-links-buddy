@@ -1,6 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, LinkType } from "../types";
-import { addLink as dbAddLink, getLinks as dbGetLinks, updateLink as dbUpdateLink, deleteLink as dbDeleteLink } from "../db/services";
+import {
+  addLink as dbAddLink,
+  getLinks as dbGetLinks,
+  updateLink as dbUpdateLink,
+  deleteLink as dbDeleteLink,
+} from "../db/services";
+import { listenMessage } from "../utils/extension";
+import { LINK_ADDED_MESSAGE } from "../constants/extension";
 
 export function useLinks() {
   const [links, setLinks] = useState<Link[]>([]);
@@ -37,6 +44,14 @@ export function useLinks() {
     }
   };
 
+  const refreshLinks = async () => {
+    await dbGetLinks().then(setLinks);
+  };
+
+  const listenLinkUpdates = useCallback(() => {
+    listenMessage(refreshLinks, (message) => message === LINK_ADDED_MESSAGE);
+  }, []);
+
   return {
     links,
     editingLink,
@@ -44,5 +59,6 @@ export function useLinks() {
     addLink,
     updateLink,
     deleteLink,
+    listenLinkUpdates
   };
-} 
+}

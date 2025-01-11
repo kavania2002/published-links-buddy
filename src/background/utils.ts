@@ -1,3 +1,4 @@
+import { LINK_ADDED_MESSAGE } from "../constants/extension";
 import { addLink } from "../db/services";
 import { Message } from "../types";
 
@@ -7,14 +8,22 @@ import { Message } from "../types";
  */
 const listenMessage = async () => {
   chrome.runtime.onMessage.addListener(async (message: Message) => {
-    const currentDate = new Date();
-    await addLink({
-      id: currentDate.getTime().toString(),
-      title: message.title,
-      url: message.url,
-      type: "claude",
-      createdAt: currentDate.toISOString(),
-    });
+    if (message.data) {
+      const currentDate = new Date();
+      try {
+        await addLink({
+          id: currentDate.getTime().toString(),
+          title: message.data.title,
+          url: message.data.url,
+          type: "claude",
+          createdAt: currentDate.toISOString(),
+        });
+        // TODO: Might raise error when the side panel is not opened
+        chrome.runtime.sendMessage({ message: LINK_ADDED_MESSAGE });
+      } catch (error) {
+        console.error(error);
+      }
+    }
   });
 };
 

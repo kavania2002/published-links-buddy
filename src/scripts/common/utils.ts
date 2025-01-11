@@ -7,7 +7,7 @@ export const sendUrlToBackground = async (
 ): Promise<void> => {
   try {
     const title = await promptUserForURLTitle();
-    if (url) chrome.runtime.sendMessage({ title, url });
+    if (url) chrome.runtime.sendMessage({ data: { title, url } });
   } catch (error) {
     console.error(error);
   }
