@@ -9,7 +9,7 @@ import {
 import { listenMessage } from "../utils/extension";
 import { LINK_ADDED_MESSAGE } from "../constants/extension";
 
-export function useLinks() {
+export default function useLinks() {
   const [links, setLinks] = useState<Link[]>([]);
   const [editingLink, setEditingLink] = useState<Link | null>(null);
 

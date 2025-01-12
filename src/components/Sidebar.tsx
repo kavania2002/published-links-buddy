@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
 import { Plus, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import LinkForm from "./LinkForm";
 import SettingsPanel from "./SettingsPanel";
-import { Settings, Link, LinkType } from "../types";
 import Button from "./ui/Button";
-import { useLinks } from "../hooks/useLinks";
+import useLinkManager from "../hooks/useLinkManager";
+import useSettingsManager from "../hooks/useSettingsManager";
+import useFilterManager from "../hooks/useFilterManager";
 import PlatformFilter from "./PlatformFilter";
 import LinkList from "./LinkList";
+import useFormManager from "../hooks/useFormManager";
 
 export default function Sidebar() {
   const {
@@ -17,51 +18,27 @@ export default function Sidebar() {
     updateLink,
     deleteLink,
     listenLinkUpdates,
-  } = useLinks();
-  const [isAdding, setIsAdding] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState<LinkType | "all">(
-    "all"
-  );
-  const [settings, setSettings] = useState<Settings>({
-    autoSave: true,
-    notifications: true,
-    enabled: true,
-    cleanupDays: 30,
+  } = useLinkManager();
+  const {
+    selectedPlatform,
+    handlePlatformChange,
+    platformCounts,
+    filteredLinks,
+  } = useFilterManager({ links });
+
+  const { settings, showSettings, setShowSettings, handleSaveSettings } =
+    useSettingsManager({
+      autoSave: true,
+      notifications: true,
+      enabled: true,
+      cleanupDays: 30,
+    });
+
+  const { isAdding, setIsAdding, handleSubmit } = useFormManager({
+    editingLink,
+    addLink,
+    updateLink,
   });
-
-  const handleSubmit = (linkData: Partial<Link>) => {
-    if (editingLink) {
-      updateLink(linkData);
-    } else {
-      addLink(linkData);
-      setIsAdding(false);
-    }
-  };
-
-  const handleSaveSettings = (newSettings: Settings) => {
-    setSettings(newSettings);
-    setShowSettings(false);
-  };
-
-  const handlePlatformChange = (platform: LinkType | "all") => {
-    setSelectedPlatform(platform);
-  };
-
-  const platformCounts = useMemo(() => {
-    const counts = links.reduce((acc, link) => {
-      return { ...acc, [link.type]: (acc[link.type] || 0) + 1 };
-    }, {} as Record<LinkType | "all", number>);
-
-    counts.all = links.length;
-    return counts;
-  }, [links]);
-
-  const filteredLinks = useMemo(() => {
-    return selectedPlatform === "all"
-      ? links
-      : links.filter((link) => link.type === selectedPlatform);
-  }, [links, selectedPlatform]);
 
   if (process.env.NODE_ENV !== "development") {
     listenLinkUpdates();
