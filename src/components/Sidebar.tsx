@@ -8,6 +8,9 @@ import useFilterManager from "../hooks/useFilterManager";
 import PlatformFilter from "./PlatformFilter";
 import LinkList from "./LinkList";
 import useFormManager from "../hooks/useFormManager";
+import usePaginationManager from "../hooks/usePaginationManager";
+import { ITEMS_PER_PAGE } from "../constants/extension";
+import Pagination from "./Pagination";
 
 export default function Sidebar() {
   const {
@@ -39,6 +42,17 @@ export default function Sidebar() {
     addLink,
     updateLink,
   });
+
+  const {
+    startIndex,
+    endIndex,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    goToNextPage,
+    goToPrevPage,
+    visiblePages,
+  } = usePaginationManager({ totalLinks: filteredLinks.length });
 
   if (process.env.NODE_ENV !== "development") {
     listenLinkUpdates();
@@ -87,12 +101,23 @@ export default function Sidebar() {
 
             <div className="py-2">
               <LinkList
-                links={filteredLinks}
+                links={filteredLinks.slice(startIndex, endIndex)}
                 onEdit={setEditingLink}
                 onDelete={deleteLink}
               />
             </div>
           </div>
+
+          {filteredLinks.length > ITEMS_PER_PAGE && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              goToNextPage={goToNextPage}
+              goToPrevPage={goToPrevPage}
+              visiblePages={visiblePages}
+            />
+          )}
 
           {!isAdding && !editingLink && (
             <div className="p-4 border-t bg-white">
