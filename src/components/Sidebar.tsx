@@ -11,6 +11,8 @@ import useFormManager from "../hooks/useFormManager";
 import usePaginationManager from "../hooks/usePaginationManager";
 import { ITEMS_PER_PAGE } from "../constants/extension";
 import Pagination from "./Pagination";
+import SearchBar from "./SearchBar";
+import useSearchManager from "../hooks/useSearchManager";
 
 export default function Sidebar() {
   const {
@@ -22,6 +24,7 @@ export default function Sidebar() {
     deleteLink,
     listenLinkUpdates,
   } = useLinkManager();
+
   const {
     selectedPlatform,
     handlePlatformChange,
@@ -43,6 +46,10 @@ export default function Sidebar() {
     updateLink,
   });
 
+  const { searchQuery, handleSearch, searchedLinks } = useSearchManager({
+    filteredLinks,
+  });
+
   const {
     startIndex,
     endIndex,
@@ -52,7 +59,9 @@ export default function Sidebar() {
     goToNextPage,
     goToPrevPage,
     visiblePages,
-  } = usePaginationManager({ totalLinks: filteredLinks.length });
+  } = usePaginationManager({
+    totalLinks: searchedLinks.length,
+  });
 
   if (process.env.NODE_ENV !== "development") {
     listenLinkUpdates();
@@ -86,6 +95,11 @@ export default function Sidebar() {
             counts={platformCounts}
           />
 
+          <SearchBar
+            value={searchQuery}
+            onSearch={(value) => handleSearch(value, () => setCurrentPage(1))}
+          />
+
           <div className="flex-1 overflow-y-auto bg-gray-50/50">
             {(isAdding || editingLink) && (
               <LinkForm
@@ -101,14 +115,14 @@ export default function Sidebar() {
 
             <div className="py-2">
               <LinkList
-                links={filteredLinks.slice(startIndex, endIndex)}
+                links={searchedLinks.slice(startIndex, endIndex)}
                 onEdit={setEditingLink}
                 onDelete={deleteLink}
               />
             </div>
           </div>
 
-          {filteredLinks.length > ITEMS_PER_PAGE && (
+          {searchedLinks.length > ITEMS_PER_PAGE && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
