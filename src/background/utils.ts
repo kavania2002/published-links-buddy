@@ -15,7 +15,7 @@ const listenMessage = async () => {
           id: currentDate.getTime().toString(),
           title: message.data.title,
           url: message.data.url,
-          type: "claude",
+          type: message.data.platform,
           createdAt: currentDate.toISOString(),
         });
         // TODO: Might raise error when the side panel is not opened
