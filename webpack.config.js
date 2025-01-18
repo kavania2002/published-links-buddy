@@ -7,6 +7,7 @@ const __dirname = path.dirname(__filename);
 export default {
   entry: {
     "scripts/claude": "./src/scripts/claude/index.ts",
+    "scripts/chatgpt": "./src/scripts/chatgpt/index.ts",
     "background/service-worker": "./src/background/service-worker.ts",
   },
   output: {
