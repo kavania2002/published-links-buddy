@@ -1,3 +1,4 @@
+import { CLAUDE } from "../common/constants";
 import { sendUrlToBackground } from "../common/utils";
 import {
   POSSIBLE_DIALOG_OPEN_TEXTS,
@@ -34,7 +35,7 @@ const handlePublishedUrl = (mutationList: MutationRecord[]): string | null => {
     const dialogElement = mutation.target as HTMLElement;
     const url = findUrlFromDialog(dialogElement);
     if (isValidURL(url)) {
-      sendUrlToBackground(url);
+      sendUrlToBackground(url, CLAUDE);
       reset();
       return url;
     }
@@ -70,7 +71,7 @@ export const handleDialogClick = (event: MouseEvent): void => {
     if (dialogElement) {
       const url = findUrlFromDialog(dialogElement);
       if (isValidURL(url)) {
-        sendUrlToBackground(url);
+        sendUrlToBackground(url, CLAUDE);
       } else {
         observer = new MutationObserver((mutationList) =>
           handlePublishedUrl(mutationList)

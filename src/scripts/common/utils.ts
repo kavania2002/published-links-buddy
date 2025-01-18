@@ -3,11 +3,12 @@
  * @param url - The URL to send to the background script.
  */
 export const sendUrlToBackground = async (
-  url: string | null
+  url: string | null,
+  platform: string
 ): Promise<void> => {
   try {
     const title = await promptUserForURLTitle();
-    if (url) chrome.runtime.sendMessage({ data: { title, url } });
+    if (url) chrome.runtime.sendMessage({ data: { title, url, platform } });
   } catch (error) {
     console.error(error);
   }
