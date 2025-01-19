@@ -24,7 +24,7 @@ export default function LinkItem({ link, onEdit, onDelete }: LinkItemProps) {
             <p className="w-full break-all">{link.url}</p>
           </a>
           <div className="text-xs text-gray-500 mt-1 font-mono">
-            {new Date(link.createdAt).toLocaleDateString(undefined, {
+            {new Date(link.updatedAt).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
               year: "numeric",

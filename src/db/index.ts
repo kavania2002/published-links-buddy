@@ -15,7 +15,7 @@ function openDatabase() {
         dbStore.createIndex("url", "url", { unique: true });
         dbStore.createIndex("title", "title", { unique: false });
         dbStore.createIndex("type", "type", { unique: false });
-        dbStore.createIndex("createdAt", "createdAt", { unique: false });
+        dbStore.createIndex("updatedAt", "updatedAt", { unique: false });
       }
     };
 

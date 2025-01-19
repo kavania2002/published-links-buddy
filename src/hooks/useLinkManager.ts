@@ -24,6 +24,7 @@ export default function useLinks() {
       url: linkData.url || "",
       type: (linkData.type as LinkType) || "gpt",
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     await dbAddLink(newLink);
     dbGetLinks().then(setLinks);
@@ -31,7 +32,10 @@ export default function useLinks() {
 
   const updateLink = async (linkData: Partial<Link>) => {
     if (editingLink) {
-      await dbUpdateLink(linkData as Link);
+      await dbUpdateLink({
+        ...(linkData as Link),
+        updatedAt: new Date().toISOString(),
+      });
       dbGetLinks().then(setLinks);
       setEditingLink(null);
     }
@@ -59,6 +63,6 @@ export default function useLinks() {
     addLink,
     updateLink,
     deleteLink,
-    listenLinkUpdates
+    listenLinkUpdates,
   };
 }

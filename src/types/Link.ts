@@ -6,6 +6,7 @@ export interface Link {
   url: string;
   type: LinkType;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface BotDetails {
