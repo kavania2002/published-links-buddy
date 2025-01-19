@@ -32,8 +32,25 @@ async function getLinks(): Promise<Link[]> {
   const store = transaction.objectStore("links");
 
   return new Promise((resolve, reject) => {
-    const request = store.getAll();
-    handleTransaction<Link[]>(request, resolve, reject);
+    const index = store.index("updatedAt");
+    const cursorRequest = index.openCursor(null, "prev");
+
+    const results: Link[] = [];
+
+    cursorRequest.onsuccess = (event) => {
+      const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+      if (cursor) {
+        results.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(results);
+      }
+    };
+
+    cursorRequest.onerror = () =>
+      reject(
+        new Error(cursorRequest.error?.message || "Cursor request failed")
+      );
   });
 }
 

@@ -17,6 +17,7 @@ const listenMessage = async () => {
           url: message.data.url,
           type: message.data.platform,
           createdAt: currentDate.toISOString(),
+          updatedAt: currentDate.toISOString(),
         });
         // TODO: Might raise error when the side panel is not opened
         chrome.runtime.sendMessage({ message: LINK_ADDED_MESSAGE });
