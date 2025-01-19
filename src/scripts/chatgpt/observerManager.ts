@@ -1,5 +1,5 @@
 let dialogBoxObserver: MutationObserver | null = null;
-let createLinkButtonObserver: MutationObserver | null = null;
+let linkButtonObserver: MutationObserver | null = null;
 
 export const resetDialogObserver = (): void => {
   if (dialogBoxObserver) {
@@ -8,10 +8,10 @@ export const resetDialogObserver = (): void => {
   }
 };
 
-export const resetCreateLinkButtonObserver = (): void => {
-  if (createLinkButtonObserver) {
-    createLinkButtonObserver.disconnect();
-    createLinkButtonObserver = null;
+export const resetLinkButtonObserver = (): void => {
+  if (linkButtonObserver) {
+    linkButtonObserver.disconnect();
+    linkButtonObserver = null;
   }
 };
 
@@ -27,13 +27,13 @@ export const setDialogBoxObserver = (
   });
 };
 
-export const setCreateLinkButtonObserver = (
+export const setLinkButtonObserver = (
   callback: MutationCallback,
   createLinkButton: HTMLElement
 ): void => {
-  resetCreateLinkButtonObserver();
-  createLinkButtonObserver = new MutationObserver(callback);
-  createLinkButtonObserver.observe(createLinkButton, {
+  resetLinkButtonObserver();
+  linkButtonObserver = new MutationObserver(callback);
+  linkButtonObserver.observe(createLinkButton, {
     childList: true,
     subtree: true,
   });
