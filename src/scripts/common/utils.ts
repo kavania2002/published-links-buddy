@@ -9,6 +9,7 @@ export const sendUrlToBackground = async (
   try {
     const title = await promptUserForURLTitle();
     if (url) chrome.runtime.sendMessage({ data: { title, url, platform } });
+    // TODO: If user cancels the prompt, we should not throw error.
   } catch (error) {
     console.error(error);
   }
