@@ -2,17 +2,18 @@ import { GPT } from "../common/constants";
 import { sendUrlToBackground } from "../common/utils";
 import { COPIED } from "./constants";
 import {
-  resetCreateLinkButtonObserver,
+  resetLinkButtonObserver,
   resetDialogObserver,
-  setCreateLinkButtonObserver,
+  setLinkButtonObserver,
   setDialogBoxObserver,
 } from "./observerManager";
 import {
   getCreateLinkButton,
   findActiveDialog,
   getPublishedURL,
-  isNewChat,
   isShareButton,
+  isDesiredh2Element,
+  getUpdateLinkButton,
 } from "./utils";
 
 const observeCreateLinkButton = (
@@ -30,33 +31,33 @@ const observeCreateLinkButton = (
     } catch (error) {
       console.error("Failed to get published URL:", error);
     } finally {
-      resetCreateLinkButtonObserver();
+      resetLinkButtonObserver();
     }
   }
 };
 
-const checkUnpublishedChat = (
+const extractURLFromDialog = (
   mutationList: MutationRecord[],
   dialogElement: HTMLElement
 ): void => {
-  const newChatMutation = mutationList.find((mutation) =>
-    isNewChat(mutation.target as HTMLElement)
+  const isDesiredh2Mutation = mutationList.find((mutation) =>
+    isDesiredh2Element(mutation.target as HTMLElement)
   );
 
-  // TODO: what if the published chat is not saved previously and the user wants to save it now?
-  if (!newChatMutation) {
-    console.log("No new chat detected");
+  if (!isDesiredh2Mutation) {
+    console.log("No desired h2 element found");
     resetDialogObserver();
     return;
   }
 
-  const createLinkButton = getCreateLinkButton(dialogElement);
-  if (createLinkButton) {
-    createLinkButton.addEventListener("click", () => {
-      setCreateLinkButtonObserver(
+  const linkButton =
+    getCreateLinkButton(dialogElement) || getUpdateLinkButton(dialogElement);
+  if (linkButton) {
+    linkButton.addEventListener("click", () => {
+      setLinkButtonObserver(
         (mutationRecords) =>
           observeCreateLinkButton(mutationRecords, dialogElement),
-        createLinkButton
+        linkButton
       );
     });
   }
@@ -76,7 +77,7 @@ const handleDialogClick = (event: MouseEvent): void => {
     if (dialogElement) {
       setDialogBoxObserver(
         (mutationRecords: MutationRecord[]) =>
-          checkUnpublishedChat(mutationRecords, dialogElement),
+          extractURLFromDialog(mutationRecords, dialogElement),
         dialogElement
       );
     }
