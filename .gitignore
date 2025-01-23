@@ -12,8 +12,6 @@ dist
 dist-ssr
 *.local
 
-release/release.zip
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
