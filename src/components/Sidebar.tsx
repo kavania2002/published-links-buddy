@@ -75,8 +75,9 @@ export default function Sidebar() {
           <span className="">Published Links Buddy</span>
         </h1>
         <button
+          disabled
           onClick={() => setShowSettings(true)}
-          className="p-1.5 text-gray-400 hover:text-white rounded-full hover:bg-gray-800 transition-colors">
+          className="p-1.5 cursor-not-allowed text-gray-400 hover:text-white rounded-full hover:bg-gray-800 transition-colors">
           <SettingsIcon className="w-5 h-5" />
         </button>
       </div>
